@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Kitchen Chef - What Can I Cook?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/kitchen.css') }}">
+</head>
+<body class="bg-gradient-to-br from-orange-50 to-yellow-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">🍳 What Can I Cook?</h1>
+            <p class="text-gray-600 text-lg">Select your appliances and ingredients to get personalized cooking suggestions</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Left Panel - Kitchen Setup -->
+            <div class="bg-white rounded-2xl shadow-xl p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                    <span class="mr-2">🏠</span>
+                    Your Kitchen Setup
+                </h2>
+
+                <!-- Appliances Section -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-medium text-gray-700 mb-4 flex items-center">
+                        <span class="mr-2">⚡</span>
+                        Available Appliances
+                    </h3>
+                    <div id="appliances-container" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <!-- Appliances will be rendered here -->
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-sm text-gray-600">
+                            Selected: <span id="appliance-count" class="font-medium text-green-600">0</span> appliances
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Ingredients Section -->
+                <div>
+                    <h3 class="text-lg font-medium text-gray-700 mb-4 flex items-center">
+                        <span class="mr-2">🥕</span>
+                        Available Ingredients
+                        <span class="ml-2 text-sm font-normal text-gray-500">(2-10 required)</span>
+                    </h3>
+                    
+                    <!-- Selected Ingredients Display -->
+                    <div id="selected-ingredients" class="min-h-[60px] mb-4 p-3 border-2 border-dashed border-gray-300 rounded-lg flex flex-wrap items-center">
+                        <div id="no-ingredients-text" class="text-gray-500 text-sm">
+                            No ingredients selected yet. Start typing below to add ingredients.
+                        </div>
+                    </div>
+
+                    <!-- Ingredient Search -->
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="ingredient-input" 
+                            placeholder="Start typing to search ingredients..."
+                            class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        >
+                        <div id="ingredient-dropdown" class="absolute z-10 w-full bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto hidden">
+                            <!-- Dropdown items will be rendered here -->
+                        </div>
+                    </div>
+                    
+                    <div class="mt-2 flex justify-between text-sm">
+                        <span class="text-gray-600">
+                            Selected: <span id="ingredient-count" class="font-medium">0</span>/10
+                        </span>
+                        <span id="ingredient-error" class="text-red-500 hidden">
+                            Select 2-10 ingredients to continue
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+<!-- Right Panel - Chef's Suggestion -->
+<div class="bg-white rounded-2xl shadow-xl p-6">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+        <span class="mr-2">👨‍🍳</span>
+        Chef's Suggestion
+    </h2>
+
+    <!-- Get Suggestion Button -->
+    <button 
+        id="get-suggestion-btn"
+        class="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white py-4 px-6 rounded-lg font-semibold text-lg transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 mb-6"
+        disabled
+    >
+        <span id="button-text">Get Cooking Suggestion</span>
+    </button>
+
+        <!-- Response Area -->
+        <div class="bg-gray-50 rounded-lg p-6 min-h-[400px]">
+            <!-- Cooking Animation Container -->
+            <div id="cooking-animation-container" class="hidden justify-center items-center h-full">
+                <!-- Animation will be inserted here by JavaScript -->
+            </div>
+            
+            <!-- Chef Response -->
+            <div id="chef-response" class="text-gray-800 whitespace-pre-wrap leading-relaxed">
+                <div class="text-center text-gray-500 mt-16">
+                    <div class="text-6xl mb-4">🍽️</div>
+                    <p class="text-lg">Select your appliances and ingredients above, then click "Get Cooking Suggestion" to see what delicious meals you can prepare!</p>
+                </div>
+            </div>
+        </div>
+
+                <!-- Error Message -->
+                <div id="error-message" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg hidden">
+                    <div class="flex items-center">
+                        <span class="mr-2">⚠️</span>
+                        <span id="error-text"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Debug Button -->
+    <button id="debug-button" class="debug-button" title="Open Debug Panel">🐛</button>
+
+    <!-- Debug Popup -->
+    <div id="debug-popup" class="debug-popup hidden">
+        <div class="debug-content">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Debug Panel</h2>
+                <button id="close-debug" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Connection Status</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span>API URL:</span>
+                            <span id="debug-api-url" class="font-mono text-sm"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Last Request Status:</span>
+                            <span id="debug-status" class="font-mono text-sm">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Response Time:</span>
+                            <span id="debug-response-time" class="font-mono text-sm">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button id="test-connection" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                            Test Connection
+                        </button>
+                        <button id="clear-debug-log" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 ml-2">
+                            Clear Log
+                        </button>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Current State</h3>
+                    <div class="space-y-2 text-sm">
+                        <div>Appliances: <span id="debug-appliances">-</span></div>
+                        <div>Ingredients: <span id="debug-ingredients">-</span></div>
+                        <div>Last Prompt: <span id="debug-prompt" class="break-all">-</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <h3 class="text-lg font-semibold mb-3">Debug Log</h3>
+                <div id="debug-log" class="debug-log">Ready to debug...\n</div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/kitchen.js') }}?v={{ range(1, 1000) | random }}"></script>
+</body>
+</html>

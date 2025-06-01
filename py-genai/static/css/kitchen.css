@@ -1,0 +1,456 @@
+body {
+    font-family: 'Inter', sans-serif;
+}
+.appliance-button {
+    transition: all 0.2s ease-in-out;
+}
+.appliance-button.selected {
+    background-color: #22c55e;
+    color: white;
+    transform: scale(1.05);
+}
+.appliance-button:hover:not(.selected) {
+    background-color: #f3f4f6;
+    transform: scale(1.02);
+}
+.ingredient-tag {
+    display: flex;
+    align-items: center;
+    background-color: #ddd6fe;
+    color: #5b21b6;
+    padding: 0.5rem 0.75rem;
+    border-radius: 9999px;
+    margin: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    animation: slideIn 0.3s ease-out;
+}
+.ingredient-tag:hover {
+    background-color: #c4b5fd;
+}
+.ingredient-tag .remove-btn {
+    margin-left: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    color: #7c3aed;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(124, 58, 237, 0.2);
+}
+.ingredient-tag .remove-btn:hover {
+    background-color: rgba(124, 58, 237, 0.4);
+}
+.dropdown-item {
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.dropdown-item:hover {
+    background-color: #f3f4f6;
+}
+
+/* Cooking Animation Container */
+#cooking-animation-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.animation-wrapper {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+/* Pot Animation */
+.pot-animation .pot {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 35px;
+    background: #a8a29e;
+    border-radius: 0 0 10px 10px;
+    z-index: 2;
+}
+
+.pot-animation .pot-top {
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 10px;
+    background: #78716c;
+    border-radius: 5px;
+}
+
+.pot-animation .steam {
+    position: absolute;
+    background: #d6d3d1;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    bottom: 35px;
+    opacity: 0;
+    animation: steamRise 3s infinite;
+}
+
+.pot-animation .steam-1 {
+    left: 40%;
+    animation-delay: 0.5s;
+}
+.pot-animation .steam-2 {
+    left: 50%;
+    animation-delay: 1s;
+}
+.pot-animation .steam-3 {
+    left: 60%;
+    animation-delay: 1.5s;
+}
+
+@keyframes steamRise {
+    0% { 
+        bottom: 35px; 
+        opacity: 0;
+        transform: translateY(0) scale(0.8);
+    }
+    40% { opacity: 0.8; }
+    100% { 
+        bottom: 70px; 
+        opacity: 0;
+        transform: translateY(-10px) scale(1.2);
+    }
+}
+
+/* Toaster Animation */
+.toaster-animation .toaster {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 40px;
+    background: #d6d3d1;
+    border-radius: 5px;
+    z-index: 2;
+}
+
+.toaster-animation .toaster-slot {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 25px;
+    background: #a8a29e;
+    border-radius: 3px;
+}
+
+.toaster-animation .bread {
+    position: absolute;
+    width: 35px;
+    height: 10px;
+    background: #d97706;
+    border-radius: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    animation: breadPop 2s ease-in-out;
+}
+
+.toaster-animation .bread-1 {
+    bottom: 15px;
+}
+.toaster-animation .bread-2 {
+    bottom: 30px;
+}
+
+@keyframes breadPop {
+    0% { 
+        transform: translateX(-50%) translateY(0);
+    }
+    20% { 
+        transform: translateX(-50%) translateY(-30px);
+    }
+    40% { 
+        transform: translateX(-50%) translateY(-20px);
+    }
+    60% { 
+        transform: translateX(-50%) translateY(-10px);
+    }
+    80% { 
+        transform: translateX(-50%) translateY(-5px);
+    }
+    100% { 
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+
+/* Blender Animation */
+.blender-animation .blender {
+    position: relative;
+    width: 50px;
+    height: 70px;
+}
+
+.blender-animation .blender-base {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 20px;
+    background: #a8a29e;
+    border-radius: 5px;
+}
+
+.blender-animation .blender-jar {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background: #e5e5e5;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+}
+
+.blender-animation .blade-container {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 10px;
+    animation: blend 1s linear infinite;
+}
+
+.blender-animation .blade {
+    position: absolute;
+    background: #4b5563;
+    width: 8px; /* Increased from 5px for visibility */
+    height: 12px; /* Increased from 10px */
+    bottom: 0;
+    left: 50%; /* Center in 20px container */
+    transform-origin: bottom center;
+}
+.blender-animation .blade-1 {
+    transform: translateX(-50%) rotateY(0deg);
+}
+.blender-animation .blade-2 {
+    transform: translateX(-50%) rotateY(90deg);
+}
+
+.blender-animation .blender-top {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 10px;
+    background: #78716c;
+    border-radius: 5px;
+}
+
+@keyframes blend {
+    0% { transform: translateX(-50%) rotateY(0deg); }
+    100% { transform: translateX(-50%) rotateY(360deg); }
+}
+
+/* Microwave Animation */
+.microwave-animation .microwave {
+    position: relative;
+    width: 70px;
+    height: 50px;
+    background: #d6d3d1;
+    border-radius: 5px;
+}
+
+.microwave-animation .microwave-door {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 60px;
+    height: 40px;
+    background: #a8a29e;
+    border-radius: 3px;
+}
+
+.microwave-animation .microwave-window {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 50px;
+    height: 25px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    overflow: hidden;
+    perspective: 100px; /* Adds 3D depth for rotateX */
+}
+
+.microwave-animation .cup {
+    position: absolute;
+    left: 50%; /* Center horizontally */
+    top: 5px;
+    width: 20px;
+    height: 15px;
+    background: #d97706;
+    border-radius: 2px 2px 0 0;
+    transform: translateX(-50%); /* Adjust for centering */
+    animation: foodCook 6s linear infinite;
+}
+
+.microwave-animation .cup::after {
+    content: '';
+    position: absolute;
+    right: -5px;
+    top: 5px;
+    width: 5px;
+    height: 5px;
+    border: 2px solid #d97706;
+    border-left: none;
+    border-radius: 0 2px 2px 0;
+}
+
+.microwave-animation .microwave-controls {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 15px;
+    height: 10px;
+    background: #4b5563;
+    border-radius: 2px;
+}
+
+.microwave-animation .microwave-light {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 5px;
+    height: 5px;
+    background: #fbbf24;
+    border-radius: 50%;
+    animation: microwaveLight 2s infinite;
+}
+
+@keyframes foodCook {
+    0% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(360deg);
+    }
+}
+
+@keyframes microwaveLight {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* Animation States */
+.loading .pot-container {
+    opacity: 1;
+}
+.loading .toaster-container {
+    opacity: 0;
+}
+
+.ready .pot-container {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.4s ease;
+}
+.ready .toaster-container {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.4s ease 0.2s;
+}
+.ready .blender-container {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.4s ease 0.4s;
+}
+.ready .microwave-container {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.4s ease 0.6s;
+}
+
+/* Add this to make sure animations are visible */
+.animation-wrapper {
+    transform: scale(1.5); /* Make animations larger */
+}
+
+/* Ensure all animations are visible when container is shown */
+#cooking-animation-container.hidden {
+    display: none;
+}
+#cooking-animation-container:not(.hidden) {
+    display: flex;
+}
+
+/* Original animations kept for other elements */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+.debug-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.debug-content {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 90vw;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+.debug-log {
+    background: #1f2937;
+    color: #f9fafb;
+    padding: 16px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+.debug-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+}
+.debug-button:hover {
+    background: #dc2626;
+}
