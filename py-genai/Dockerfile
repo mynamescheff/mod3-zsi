@@ -1,43 +1,55 @@
-FROM python:3.11-slim AS builder
+# syntax=docker/dockerfile:1
 
+FROM python:3.11-slim AS base
+
+# Set working directory
 WORKDIR /app
 
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# --- Builder stage ---
+FROM base AS builder
 
-FROM python:3.11-slim
+# Install build dependencies (if any needed, e.g. gcc, but not required for this app)
 
-WORKDIR /app
+# Copy requirements.txt first for better cache usage
+COPY --link requirements.txt ./
 
-# Create non-root user
-RUN adduser --disabled-password --gecos "" nomadicmehul
+# Create virtual environment and install dependencies using pip cache
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python -m venv .venv && \
+    .venv/bin/pip install --upgrade pip && \
+    .venv/bin/pip install -r requirements.txt
 
-# Copy dependencies from builder
-COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
-COPY --from=builder /usr/local/bin /usr/local/bin
+# --- Final stage ---
+FROM base AS final
 
-# Make sure directories exist
-RUN mkdir -p templates static/css static/js static/images && chown -R nomadicmehul:nomadicmehul /app
+# Create non-root user and group
+RUN groupadd -r nomadicmehul && useradd --no-log-init -r -g nomadicmehul nomadicmehul
 
-# Copy application code
-COPY app.py requirements.txt ./
-COPY templates/ templates/
-COPY static/ static/
+# Copy virtual environment from builder
+COPY --from=builder /app/.venv /app/.venv
+
+# Copy application code and assets
+COPY --link app.py requirements.txt ./
+COPY --link templates/ templates/
+COPY --link static/ static/
+
+# Set permissions
+RUN chown -R nomadicmehul:nomadicmehul /app
 
 # Switch to non-root user
 USER nomadicmehul
 
-# Expose port 8081 (matching docker-compose.yml)
-EXPOSE 8081
-
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1 \
+ENV PATH="/app/.venv/bin:$PATH" \
+    PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# Health check
+# Expose the application port
+EXPOSE 8081
+
+# Healthcheck endpoint
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:8081/health || exit 1
 
-# Run the application
+# Default command
 CMD ["python", "app.py"]

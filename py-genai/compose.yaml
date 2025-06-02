@@ -1,0 +1,30 @@
+services:
+  python-app:
+    container_name: python-genai
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    init: true
+    ports:
+      - "8081:8081"  # Expose the app's HTTP port
+    # env_file: ./.env  # Uncomment if .env file exists
+    environment:
+      # Set required environment variables here or via .env file
+      # LLM_BASE_URL: "<your-llm-api-url>"
+      # LLM_MODEL_NAME: "<your-model-name>"
+      # PORT: "8081"
+      # DEBUG: "false"
+      # LOG_LEVEL: "INFO"
+    networks:
+      - app-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 5s
+      retries: 3
+
+networks:
+  app-net:
+    driver: bridge
